@@ -1,0 +1,25 @@
+{
+  "name": "game-console",
+  "version": "1.0.0",
+  "description": "游戏后台管理系统 - Vue 3 + TypeScript + Element Plus",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "element-plus": "^2.6.1",
+    "@element-plus/icons-vue": "^2.3.1",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.15",
+    "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.4",
+    "typescript": "^5.3.3",
+    "vite": "^6.4.1",
+    "vue-tsc": "^3.2.5"
+  }
+}

@@ -35,13 +35,7 @@
               <el-tag type="success" size="small">实时</el-tag>
             </div>
           </template>
-          <div class="chart-placeholder">
-            <el-empty description="图表区域（可接入 ECharts）">
-              <template #image>
-                <el-icon size="60" color="#ddd"><DataLine /></el-icon>
-              </template>
-            </el-empty>
-          </div>
+          <div ref="activePlayersChartRef" class="chart-container"></div>
         </el-card>
       </el-col>
       <el-col :xs="24" :lg="8">
@@ -49,13 +43,7 @@
           <template #header>
             <span>游戏收入占比</span>
           </template>
-          <div class="chart-placeholder">
-            <el-empty description="图表区域（可接入 ECharts）">
-              <template #image>
-                <el-icon size="60" color="#ddd"><PieChart /></el-icon>
-              </template>
-            </el-empty>
-          </div>
+          <div ref="revenueChartRef" class="chart-container"></div>
         </el-card>
       </el-col>
     </el-row>
@@ -91,6 +79,123 @@
 </template>
 
 <script setup lang="ts">
+import * as echarts from 'echarts'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
+
+const activePlayersChartRef = ref<HTMLElement | null>(null)
+const revenueChartRef = ref<HTMLElement | null>(null)
+let activePlayersChart: echarts.ECharts | null = null
+let revenueChart: echarts.ECharts | null = null
+
+onMounted(() => {
+  if (activePlayersChartRef.value) {
+    activePlayersChart = echarts.init(activePlayersChartRef.value)
+    
+    const option = {
+      tooltip: {
+        trigger: 'axis'
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: '活跃玩家',
+          type: 'line',
+          smooth: true,
+          areaStyle: {
+            opacity: 0.3,
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#1890ff' },
+              { offset: 1, color: 'rgba(24,144,255,0.1)' }
+            ])
+          },
+          itemStyle: {
+            color: '#1890ff'
+          },
+          data: [8200, 9320, 9010, 9340, 12900, 15300, 14200]
+        }
+      ]
+    }
+    
+    activePlayersChart.setOption(option)
+  }
+
+  if (revenueChartRef.value) {
+    revenueChart = echarts.init(revenueChartRef.value)
+    
+    const revenueOption = {
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        bottom: '0%',
+        left: 'center'
+      },
+      series: [
+        {
+          name: '游戏收入占比',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: '16',
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: [
+            { value: 45000, name: '王者荣耀' },
+            { value: 28000, name: '和平精英' },
+            { value: 15240, name: '原神' },
+            { value: 6000, name: '英雄联盟' },
+            { value: 4000, name: '刀塔传奇' }
+          ]
+        }
+      ]
+    }
+    
+    revenueChart.setOption(revenueOption)
+  }
+
+  window.addEventListener('resize', handleResize)
+})
+
+const handleResize = () => {
+  activePlayersChart?.resize()
+  revenueChart?.resize()
+}
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize)
+  activePlayersChart?.dispose()
+  revenueChart?.dispose()
+})
+
 const stats = [
   { label: '今日活跃玩家', value: '12,847', trend: 8.5, icon: 'User', color: '#1890ff' },
   { label: '今日收入 (¥)', value: '98,240', trend: 12.3, icon: 'Money', color: '#52c41a' },
@@ -117,7 +222,7 @@ const latestOrders = [
 .page-title {
   font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: var(--el-text-color-primary);
   margin: 0 0 4px;
 }
 
@@ -138,12 +243,12 @@ const latestOrders = [
 .stat-value {
   font-size: 28px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--el-text-color-primary);
 }
 
 .stat-label {
   font-size: 14px;
-  color: #999;
+  color: var(--el-text-color-regular);
   margin: 4px 0 8px;
 }
 
@@ -173,10 +278,15 @@ const latestOrders = [
 }
 
 .chart-placeholder {
-  height: 200px;
+  height: 300px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.chart-container {
+  height: 300px;
+  width: 100%;
 }
 
 .card-header {

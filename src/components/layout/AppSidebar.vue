@@ -35,6 +35,7 @@ const menuItems = [
   { path: '/players', title: '玩家管理', icon: 'User' },
   { path: '/games', title: '游戏配置', icon: 'Setting' },
   { path: '/orders', title: '订单管理', icon: 'List' },
+  { path: '/admins', title: '管理员系统', icon: 'UserFilled' },
 ]
 </script>
 

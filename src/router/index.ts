@@ -43,6 +43,18 @@ const router = createRouter({
           component: () => import('@/views/OrdersView.vue'),
           meta: { title: '订单管理', icon: 'List' },
         },
+        {
+          path: 'admins',
+          name: 'Admins',
+          component: () => import('@/views/AdminsView.vue'),
+          meta: { title: '管理员设置', icon: 'UserFilled' },
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: () => import('@/views/ProfileView.vue'),
+          meta: { title: '个人信息', icon: 'User' },
+        },
       ],
     },
     {

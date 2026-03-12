@@ -73,7 +73,7 @@ const collapsed = computed(() => appStore.collapsed)
 }
 
 .main-content {
-  background-color: #f0f2f5;
+  background-color: var(--el-bg-color-page, #f0f2f5);
   overflow-y: auto;
   padding: 20px;
 }

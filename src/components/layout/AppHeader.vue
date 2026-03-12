@@ -8,6 +8,13 @@
         @click="emit('toggle-sidebar')"
         class="toggle-btn"
       />
+      <el-button
+        :icon="appStore.theme === 'dark' ? 'Moon' : 'Sunny'"
+        text
+        size="large"
+        @click="appStore.toggleTheme()"
+        class="theme-btn toggle-btn"
+      />
       <el-breadcrumb separator="/">
         <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
         <el-breadcrumb-item>{{ currentTitle }}</el-breadcrumb-item>
@@ -64,31 +71,34 @@ async function handleCommand(command: string) {
     router.push('/login')
     ElMessage.success('已退出登录')
   } else if (command === 'profile') {
-    ElMessage.info('个人信息功能开发中...')
+    router.push('/profile')
   }
 }
 </script>
 
 <style scoped>
 .app-header {
-  background: white;
+  background: var(--el-bg-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08); /* changed slightly for dark mode */
   height: 64px;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px; /* reduced gap to fit the new button better */
 }
 
 .toggle-btn {
   font-size: 20px;
-  color: #666;
+  color: var(--el-text-color-regular);
+}
+.theme-btn {
+  margin-right: 8px; /* space before breadcrumb */
 }
 
 .header-right {
@@ -107,17 +117,17 @@ async function handleCommand(command: string) {
 }
 
 .user-info:hover {
-  background-color: #f5f5f5;
+  background-color: var(--el-fill-color-light);
 }
 
 .avatar {
-  background-color: #1890ff;
+  background-color: var(--el-color-primary);
   color: white;
   font-weight: bold;
 }
 
 .username {
   font-size: 14px;
-  color: #333;
+  color: var(--el-text-color-primary);
 }
 </style>
